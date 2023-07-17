@@ -17,7 +17,7 @@ yarn add schedule-later
 ## Import
 
 ```typescript
-import Scheduler from 'schedule-later'
+import { Scheduler, TimeInMS } from 'schedule-later'
 ```
 
 ## Key Concepts
@@ -122,11 +122,11 @@ In the `StopCancelFunction`, if the `stopRunning` parameter is `true`, it stops 
    In this example, the goodMorning function will be called at 7:00 AM. If you want to cancel the morning greeting (for example, the user chose to sleep in), you can call the stopTimeout function.
    &nbsp;
 
-3. Using startInterval with a specific interval, basically a regular setInterval
+3. Using startInterval with a specific interval, basically a regular setInterval. Uses the TimeInMS enum to clearly specify the interval.
 
    ```typescript
    const sayHello = () => console.log('Hello, world!')
-   let stopInterval = Scheduler.startInterval(sayHello, 1000)
+   let stopInterval = Scheduler.startInterval(sayHello, TimeInMS.SECOND * 5)
 
    // Later, if you want to stop the interval
    stopInterval()

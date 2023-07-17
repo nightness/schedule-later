@@ -1,4 +1,4 @@
-import Scheduler from './Scheduler'
+import { Scheduler } from './Scheduler'
 
 describe('Scheduler', () => {
   beforeEach(() => {

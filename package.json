@@ -1,12 +1,14 @@
 {
   "name": "schedule-later",
-  "version": "1.0.1",
+  "version": "1.0.5",
+  "types": "dist/Scheduler.d.ts",
   "main": "dist/Scheduler.js",
   "author": "Nightness",
   "scripts": {
     "build": "tsc",
+    "pretest": "tsc",
     "test": "./node_modules/.bin/jest --verbose",
-    "watch": "./node_modules/.bin/jest --watch"
+    "prepublish": "tsc && npm run test"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
