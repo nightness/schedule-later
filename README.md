@@ -1,6 +1,6 @@
-# Scheduler
+# Schedule Later
 
-Scheduler is a TypeScript class that provides methods for managing time-based tasks, such as starting and stopping timeouts and intervals at specific times.
+schedule-later is a TypeScript class that provides methods for managing time-based tasks, such as starting and stopping timeouts and intervals at specific times.
 
 ## Key Concepts
 
