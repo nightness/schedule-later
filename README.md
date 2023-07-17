@@ -1,6 +1,24 @@
 # Schedule Later
 
-schedule-later is a TypeScript class that provides methods for managing time-based tasks, such as starting and stopping timeouts and intervals at specific times.
+schedule-later is a static class that provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day.
+
+## Install
+
+```bash
+npm install schedule-later
+```
+
+or
+
+```bash
+yarn add schedule-later
+```
+
+## Import
+
+```typescript
+import Scheduler from 'schedule-later'
+```
 
 ## Key Concepts
 
