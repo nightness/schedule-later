@@ -36,19 +36,17 @@ export class Scheduler {
     let now = new Date()
 
     // set the target time
-    let targetTime = (
-      !start.timeOfDay
-        ? start.date
-        : new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
-            start.timeOfDay.hour,
-            start.timeOfDay.minute ?? 0,
-            start.timeOfDay.seconds ?? 0,
-            0
-          )
-    )!
+    const targetTime = start.timeOfDay
+      ? new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          start.timeOfDay.hour,
+          start.timeOfDay.minute ?? 0,
+          start.timeOfDay.seconds ?? 0,
+          0
+        )
+      : start.date ?? now
 
     // if the target time has already passed today, set it for tomorrow
     if (start.timeOfDay && now > targetTime) {
