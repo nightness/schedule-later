@@ -87,7 +87,7 @@ type StopFunction = (stopTime?: TimeUntil) => StopCancelFunction | null
 
 ## Stop Cancel Functions
 
-The `StopFunction` returns a `StopCancelFunction` when called. This function can be called to cancel a scheduled stop.
+The `StopFunction` will return a `StopCancelFunction` when called with a stopTime. This function can be called to cancel a scheduled stop.
 
 ```typescript
 type StopCancelFunction = (stopRunning: boolean = false) => void

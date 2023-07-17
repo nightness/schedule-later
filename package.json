@@ -1,9 +1,13 @@
 {
   "name": "schedule-later",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "types": "dist/Scheduler.d.ts",
   "main": "dist/Scheduler.js",
   "author": "Nightness",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nightness/schedule-later.git"
+  },
   "scripts": {
     "build": "tsc",
     "pretest": "tsc",
