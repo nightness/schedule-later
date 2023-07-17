@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "./node_modules/.bin/jest --verbose",
-    "watch": "./node_modules/.bin/jest --watch",
-    "deploy": "npm run build && npm publish"
+    "watch": "./node_modules/.bin/jest --watch"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
