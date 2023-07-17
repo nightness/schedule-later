@@ -1,6 +1,6 @@
 # Schedule Later
 
-schedule-later is a static class that provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day.
+schedule-later is a static class that provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day. Under-the-hood, it uses `setTimeout` and `setInterval`.
 
 ## Install
 
