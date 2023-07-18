@@ -35,6 +35,19 @@ describe('setTimeout Tests', () => {
     jest.advanceTimersByTime(TimeInMS.SECOND)
     expect(fn).not.toBeCalled()
   })
+
+  test('startTimeout, should still call the function if stop function is called and canceled', () => {
+    const fn = jest.fn()
+    const stop = startTimeout(fn, { ms: TimeInMS.SECOND })
+
+    expect(fn).not.toBeCalled()
+    const stopCancel = stop({
+      ms: TimeInMS.SECOND * 5,
+    })!
+    jest.advanceTimersByTime(TimeInMS.SECOND)
+    stopCancel()
+    expect(fn).toBeCalled()
+  })
 })
 
 describe('setInterval Tests', () => {

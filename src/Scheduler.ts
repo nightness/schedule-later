@@ -22,7 +22,7 @@ export type TimeUntil = {
   ms?: number
 }
 
-export type StopCancelFunction = (stopRunning: boolean) => void
+export type StopCancelFunction = (stopRunning?: boolean) => void
 
 export type StopFunction = (stopTime?: TimeUntil) => StopCancelFunction | null
 
@@ -84,29 +84,25 @@ export function startTimeout(
     if (timeout) clearTimeout(timeout)
   }
 
-  // stop() function to stop the interval and timeout
-  // stop(stopInMS) will stop the interval and timeout in stopInMS milliseconds
-  // stop(stopHour, stopMinute) will stop the interval and timeout at the next stopHour:stopMinute
+  /**
+   * Stops a timeout
+   * @param {TimeUntil} stopTime - optional
+   * @return {StopCancelFunction}
+   */
   const stop = (stopTime?: TimeUntil): StopCancelFunction | null => {
-    if (stopTime === undefined) {
+    if (!stopTime) {
       stopNow()
       return null
     }
 
-    if ((stopTime as any) instanceof Date) {
-      // @ts-ignore - TS doesn't know this is allowed
-      const timeFromNow = stopTime - new Date()
-      const stopTimeout = setTimeout(stopNow, timeFromNow)
-      // stopRunning is a boolean that will either cancel the stop (false), or stop the interval now (true)
-      return (stopRunning: boolean = false) => {
-        clearTimeout(stopTimeout)
-        if (stopRunning) stopNow()
-      }
-    }
-
     const stopTimeout = setTimeout(stopNow, timeUntil(stopTime))
-    // stopRunning is a boolean that will either cancel the stop (false), or stop the interval now (true)
-    return (stopRunning: boolean = false) => {
+
+    /**
+     * Cancels a delayed stop
+     * @param {boolean} stopRunning - optional
+     * @return void
+     */
+    return (stopRunning?: boolean) => {
       clearTimeout(stopTimeout)
       if (stopRunning) stopNow()
     }
@@ -120,7 +116,7 @@ export function startTimeout(
  * Start an interval
  * @param {Function} intervalFunc
  * @param {number} intervalMS
- * @param {TimeUntil} start
+ * @param {TimeUntil} start - optional
  * @return {StopFunction}
  */
 export function startInterval(
@@ -146,29 +142,25 @@ export function startInterval(
     if (interval) clearInterval(interval)
   }
 
-  // stop() function to stop the interval and timeout
-  // stop(stopInMS) will stop the interval and timeout in stopInMS milliseconds
-  // stop(stopHour, stopMinute) will stop the interval and timeout at the next stopHour:stopMinute
+  /**
+   * Stops an interval
+   * @param {TimeUntil} stopTime - optional
+   * @return {StopCancelFunction}
+   */
   const stop = (stopTime?: TimeUntil): StopCancelFunction | null => {
     if (stopTime === undefined) {
       stopNow()
       return null
     }
 
-    if ((stopTime as any) instanceof Date) {
-      // @ts-ignore - TS doesn't know this is allowed
-      const timeFromNow = stopTime - new Date()
-      const stopTimeout = setTimeout(stopNow, timeFromNow)
-      // stopRunning is a boolean that will either cancel the stop (false), or stop the interval now (true)
-      return (stopRunning: boolean = false) => {
-        clearTimeout(stopTimeout)
-        if (stopRunning) stopNow()
-      }
-    }
-
     const stopTimeout = setTimeout(stopNow, timeUntil(stopTime))
-    // stopRunning is a boolean that will either cancel the stop (false), or stop the interval now (true)
-    return (stopRunning: boolean = false) => {
+
+    /**
+     * Cancels a delayed stop
+     * @param {boolean} stopRunning - optional
+     * @return void
+     */
+    return (stopRunning?: boolean) => {
       clearTimeout(stopTimeout)
       if (stopRunning) stopNow()
     }
