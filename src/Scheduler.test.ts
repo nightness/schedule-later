@@ -1,21 +1,21 @@
+// @ts-ignore - TS doesn't know this is allowed
 import { startTimeout, startInterval, TimeInMS } from './Scheduler'
 
-describe('setTimeout Tests', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
+beforeEach(() => {
+  jest.useFakeTimers()
+})
 
-  afterEach(() => {
-    jest.clearAllTimers()
-  })
+afterEach(() => {
+  jest.clearAllTimers()
+})
 
-  test('startTimeout, should start and stop properly', () => {
+describe('startTimeout Tests', () => {
+  test('should start and stop properly', () => {
     const callback = jest.fn()
-
     const stop = startTimeout(callback, { ms: 5000 })
 
     // Advance timers by less than the delay and check if callback has not been called
-    jest.advanceTimersByTime(2000)
+    jest.advanceTimersByTime(TimeInMS.SECOND * 2)
     expect(callback).not.toBeCalled()
 
     // Advance timers to exactly the delay and check if callback has been called
@@ -26,46 +26,61 @@ describe('setTimeout Tests', () => {
     stop()
   })
 
-  test('startTimeout, should not call the function if stop function is called', () => {
-    const fn = jest.fn()
-    const stop = startTimeout(fn, { ms: TimeInMS.SECOND })
+  test('should not call immediately', () => {
+    const callback = jest.fn()
+    const stop = startTimeout(callback, { ms: 5000 })
 
-    expect(fn).not.toBeCalled()
+    // Should not be called immediately
+    expect(callback).not.toBeCalled()
+
+    // Cleanup
     stop()
-    jest.advanceTimersByTime(TimeInMS.SECOND)
-    expect(fn).not.toBeCalled()
   })
 
-  test('startTimeout, should still call the function if stop function is called and canceled', () => {
-    const fn = jest.fn()
-    const stop = startTimeout(fn, { ms: TimeInMS.SECOND })
+  test('should not call the function if stop function is called', () => {
+    const callback = jest.fn()
+    const stop = startTimeout(callback, { ms: TimeInMS.SECOND })
 
-    expect(fn).not.toBeCalled()
+    // Stop the timeout
+    stop()
+
+    // Advance timers by less than the delay and check if callback has not been called
+    jest.advanceTimersByTime(TimeInMS.SECOND)
+    expect(callback).not.toBeCalled()
+
+    // Advance timers by less than the delay and check if callback has not been called
+    jest.advanceTimersByTime(TimeInMS.SECOND)
+    expect(callback).not.toBeCalled()
+  })
+
+  test('should still call the function if stop function is called with a delay then canceled', () => {
+    const callback = jest.fn()
+    const stop = startTimeout(callback, { ms: TimeInMS.SECOND * 5 })
+
+    // Cancel the timeout, in 5 seconds
     const stopCancel = stop({
       ms: TimeInMS.SECOND * 5,
     })!
-    jest.advanceTimersByTime(TimeInMS.SECOND)
+
+    // Abort that cancel
     stopCancel()
-    expect(fn).toBeCalled()
+
+    // Finish timer
+    jest.advanceTimersByTime(TimeInMS.SECOND * 5)
+    expect(callback).toBeCalled()
   })
 })
 
-describe('setInterval Tests', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
-
-  afterEach(() => {
-    jest.clearAllTimers()
-  })
-
-  test('startInterval, should correctly start and repeat interval', () => {
+describe('startInterval Tests', () => {
+  test('should correctly start and repeat interval', () => {
     const callback = jest.fn()
+    const stop = startInterval(callback, TimeInMS.SECOND * 2, { ms: 5000 })
 
-    const stop = startInterval(callback, 2000, { ms: 5000 })
+    // Doesn't call the function right away
+    expect(callback).not.toBeCalled()
 
     // Advance timers by less than the initial delay and check if callback has not been called
-    jest.advanceTimersByTime(2000)
+    jest.advanceTimersByTime(TimeInMS.SECOND * 2)
     expect(callback).not.toBeCalled()
 
     // Advance timers to exactly the delay and check if callback has been called
@@ -73,20 +88,43 @@ describe('setInterval Tests', () => {
     expect(callback).toBeCalledTimes(1)
 
     // Advance timers by the interval and check if callback has been called again
-    jest.advanceTimersByTime(2000)
+    jest.advanceTimersByTime(TimeInMS.SECOND * 2)
     expect(callback).toBeCalledTimes(2)
 
     // Cleanup
     stop()
   })
 
-  test('startInterval, should not call the function if stop function is called', () => {
-    const fn = jest.fn()
-    const stop = startInterval(fn, 2000, { ms: TimeInMS.SECOND })
+  test('should not call the function if stop function is called', () => {
+    const callback = jest.fn()
+    const stop = startInterval(callback, TimeInMS.SECOND * 2, {
+      ms: TimeInMS.SECOND,
+    })
 
-    expect(fn).not.toBeCalled()
+    expect(callback).not.toBeCalled()
+
     stop()
+
     jest.advanceTimersByTime(TimeInMS.SECOND)
-    expect(fn).not.toBeCalled()
+    expect(callback).not.toBeCalled()
+  })
+
+  test('should still call the function if the stop function is called (with a delay), and the stopCancel function is called before the delay expires', () => {
+    const callback = jest.fn()
+    const stop = startInterval(callback, TimeInMS.SECOND * 2)
+
+    jest.advanceTimersByTime(TimeInMS.SECOND * 2)
+    expect(callback).toBeCalled()
+
+    const stopCancel = stop({
+      ms: TimeInMS.SECOND * 5,
+    })
+    stopCancel?.()
+
+    jest.advanceTimersByTime(TimeInMS.SECOND * 2)
+    expect(callback).toBeCalledTimes(2)
+
+    // cleanup
+    stop()
   })
 })

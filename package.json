@@ -12,11 +12,13 @@
     "build": "tsc",
     "pretest": "tsc",
     "test": "./node_modules/.bin/jest --verbose",
+    "coverage": "./node_modules/.bin/jest --coverage",
     "prepublish": "tsc && npm run test"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
     "@types/node": "^18.11.18",
+    "@types/rewire": "^2.5.28",
     "jest": "^29.6.1",
     "typescript": "^5.1.6"
   }
