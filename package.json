@@ -1,6 +1,6 @@
 {
   "name": "schedule-later",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "types": "dist/Scheduler.d.ts",
   "main": "dist/Scheduler.js",
   "author": "Nightness",
