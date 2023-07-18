@@ -1,6 +1,6 @@
 # Schedule Later
 
-schedule-later provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day. Under-the-hood, it uses `setTimeout` and `setInterval`.
+schedule-later provides functions for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day. Under-the-hood, it uses `setTimeout` and `setInterval`.
 
 ## Install
 
@@ -48,11 +48,9 @@ export type TimeUntil = {
 
 ## Usage
 
-The `Scheduler` class provides two main static methods: `startTimeout` and `startInterval`.
-
 ### startTimeout
 
-The `startTimeout` method starts a timeout that calls a given function after a specific delay. The delay is calculated based on the `TimeUntil` object passed to it. The method returns a `StopFunction` (see below).
+The `startTimeout` function starts a timeout that calls a given function after a specific delay. The delay is calculated based on the `TimeUntil` object passed to it. The function returns a `StopFunction` (see below).
 
 ```typescript
 function startTimeout(timerFunc: Function, start: TimeUntil): StopFunction
@@ -60,7 +58,7 @@ function startTimeout(timerFunc: Function, start: TimeUntil): StopFunction
 
 ### startInterval
 
-The `startInterval` method starts an interval that calls a given function repeatedly with a fixed time delay between each call. Like `startTimeout`, the initial delay is calculated based on a `TimeUntil` object. If called with `callbackAfterTimeout` set to `true`, it will call the callback function after the timeout has finished running (right when starting the interval). The method returns a `StopFunction` (see below).
+The `startInterval` function starts an interval that calls a given function repeatedly with a fixed time delay between each call. Like `startTimeout`, the initial delay is calculated based on a `TimeUntil` object. If called with `callbackAfterTimeout` set to `true`, it will call `intervalFunc` after the timeout has finished running (right when starting the interval). The function returns a `StopFunction` (see below).
 
 ```typescript
 function startInterval(
@@ -73,7 +71,7 @@ function startInterval(
 
 ## Stop Functions
 
-Both the `startTimeout` and `startInterval` methods return a `StopFunction`. This function can be called to cancel a timeout or interval.
+Both the `startTimeout` and `startInterval` functions return a `StopFunction`. This function can be called to cancel a timeout or interval.
 
 When called with no arguments, the `StopFunction` stops the timeout or interval immediately. If called with a `TimeUntil` argument, it schedules a stop at the specified time.
 
