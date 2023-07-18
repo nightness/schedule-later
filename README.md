@@ -1,6 +1,6 @@
 # Schedule Later
 
-schedule-later is a static class that provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day. Under-the-hood, it uses `setTimeout` and `setInterval`.
+schedule-later provides methods for managing date-time based tasks, such as starting timeouts and intervals at a specific time of day. Under-the-hood, it uses `setTimeout` and `setInterval`.
 
 ## Install
 
@@ -17,7 +17,7 @@ yarn add schedule-later
 ## Import
 
 ```typescript
-import { Scheduler, TimeInMS } from 'schedule-later'
+import { startTimeout, startInterval, TimeInMS } from 'schedule-later'
 ```
 
 ## Key Concepts
@@ -55,10 +55,7 @@ The `Scheduler` class provides two main static methods: `startTimeout` and `star
 The `startTimeout` method starts a timeout that calls a given function after a specific delay. The delay is calculated based on the `TimeUntil` object passed to it. The method returns a `StopFunction` (see below).
 
 ```typescript
-public static startTimeout(
-  timerFunc: Function,
-  start: TimeUntil
-): StopFunction;
+function startTimeout(timerFunc: Function, start: TimeUntil): StopFunction
 ```
 
 ### startInterval
@@ -66,11 +63,11 @@ public static startTimeout(
 The `startInterval` method starts an interval that calls a given function repeatedly with a fixed time delay between each call. Like `startTimeout`, the initial delay is calculated based on a `TimeUntil` object. The method returns a `StopFunction` (see below).
 
 ```typescript
-public static startInterval(
+function startInterval(
   intervalFunc: Function,
   intervalMS: number,
   start?: TimeUntil
-): StopFunction;
+): StopFunction
 ```
 
 ## Stop Functions

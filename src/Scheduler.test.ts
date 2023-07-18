@@ -1,6 +1,6 @@
-import { Scheduler } from './Scheduler'
+import { startTimeout, startInterval, TimeInMS } from './Scheduler'
 
-describe('Scheduler', () => {
+describe('setTimeout Tests', () => {
   beforeEach(() => {
     jest.useFakeTimers()
   })
@@ -9,10 +9,10 @@ describe('Scheduler', () => {
     jest.clearAllTimers()
   })
 
-  test('startTimeout should correctly start and stop timeout', () => {
+  test('startTimeout, should start and stop properly', () => {
     const callback = jest.fn()
 
-    const stop = Scheduler.startTimeout(callback, { ms: 5000 })
+    const stop = startTimeout(callback, { ms: 5000 })
 
     // Advance timers by less than the delay and check if callback has not been called
     jest.advanceTimersByTime(2000)
@@ -26,10 +26,30 @@ describe('Scheduler', () => {
     stop()
   })
 
-  test('startInterval should correctly start and stop interval', () => {
+  test('startTimeout, should not call the function if stop function is called', () => {
+    const fn = jest.fn()
+    const stop = startTimeout(fn, { ms: TimeInMS.SECOND })
+
+    expect(fn).not.toBeCalled()
+    stop()
+    jest.advanceTimersByTime(TimeInMS.SECOND)
+    expect(fn).not.toBeCalled()
+  })
+})
+
+describe('setInterval Tests', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
+  test('startInterval, should correctly start and repeat interval', () => {
     const callback = jest.fn()
 
-    const stop = Scheduler.startInterval(callback, 2000, { ms: 5000 })
+    const stop = startInterval(callback, 2000, { ms: 5000 })
 
     // Advance timers by less than the initial delay and check if callback has not been called
     jest.advanceTimersByTime(2000)
@@ -45,5 +65,15 @@ describe('Scheduler', () => {
 
     // Cleanup
     stop()
+  })
+
+  test('startInterval, should not call the function if stop function is called', () => {
+    const fn = jest.fn()
+    const stop = startInterval(fn, 2000, { ms: TimeInMS.SECOND })
+
+    expect(fn).not.toBeCalled()
+    stop()
+    jest.advanceTimersByTime(TimeInMS.SECOND)
+    expect(fn).not.toBeCalled()
   })
 })
