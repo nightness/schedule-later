@@ -60,13 +60,14 @@ function startTimeout(timerFunc: Function, start: TimeUntil): StopFunction
 
 ### startInterval
 
-The `startInterval` method starts an interval that calls a given function repeatedly with a fixed time delay between each call. Like `startTimeout`, the initial delay is calculated based on a `TimeUntil` object. The method returns a `StopFunction` (see below).
+The `startInterval` method starts an interval that calls a given function repeatedly with a fixed time delay between each call. Like `startTimeout`, the initial delay is calculated based on a `TimeUntil` object. If called with `callbackAfterTimeout` set to `true`, it will call the callback function after the timeout has finished running (right when starting the interval). The method returns a `StopFunction` (see below).
 
 ```typescript
 function startInterval(
   intervalFunc: Function,
   intervalMS: number,
   start?: TimeUntil
+  callbackAfterTimeout: boolean = false
 ): StopFunction
 ```
 

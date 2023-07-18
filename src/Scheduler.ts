@@ -26,7 +26,12 @@ export type StopCancelFunction = (stopRunning?: boolean) => void
 
 export type StopFunction = (stopTime?: TimeUntil) => StopCancelFunction | null
 
-function timeUntil(start: TimeUntil) {
+/**
+ * Used to convert a TimeUntil object into a number of milliseconds
+ * @param {TimeUntil} start
+ * @return {number} delay
+ */
+function timeUntil(start: TimeUntil): number {
   if (start.ms) {
     return start.ms
   }
@@ -76,10 +81,15 @@ export function startTimeout(
   timeout = setTimeout(function () {
     // Clear the timeout variable
     timeout = null
+
     // call the function immediately
     timerFunc()
   }, delay)
 
+  /**
+   * Cleanup function
+   * @return {void}
+   */
   const stopNow = () => {
     if (timeout) clearTimeout(timeout)
   }
@@ -95,6 +105,7 @@ export function startTimeout(
       return null
     }
 
+    // Set a timeout to stop the timeout at the target time
     const stopTimeout = setTimeout(stopNow, timeUntil(stopTime))
 
     /**
@@ -102,7 +113,7 @@ export function startTimeout(
      * @param {boolean} stopRunning - optional
      * @return void
      */
-    return (stopRunning?: boolean) => {
+    return (stopRunning: boolean = false) => {
       clearTimeout(stopTimeout)
       if (stopRunning) stopNow()
     }
@@ -117,26 +128,40 @@ export function startTimeout(
  * @param {Function} intervalFunc
  * @param {number} intervalMS
  * @param {TimeUntil} start - optional
+ * @param {boolean} callbackAfterTimeout - optional
  * @return {StopFunction}
  */
 export function startInterval(
   intervalFunc: Function,
   intervalMS: number,
-  start?: TimeUntil
+  start?: TimeUntil,
+  callbackAfterTimeout: boolean = false
 ): StopFunction {
   let delay = start ? timeUntil(start) : 0
 
   // set a timeout to start the interval at the target time
-  let interval: number | null = null
-  let timeout: NodeJS.Timeout | null = setTimeout(function () {
-    // Clear the timeout variable
-    timeout = null
-    // start the interval
-    interval = setInterval(intervalFunc, intervalMS)
-    // call the function immediately
-    intervalFunc()
-  }, delay)
+  let interval: number | null =
+    delay === 0 ? setInterval(intervalFunc, intervalMS) : null
+  let timeout: NodeJS.Timeout | null =
+    delay > 0
+      ? setTimeout(function () {
+          // Clear the timeout variable
+          timeout = null
 
+          // start the interval
+          interval = setInterval(intervalFunc, intervalMS)
+
+          // Invoke the callback, just because the timer expired (so at the beginning of the interval)
+          if (callbackAfterTimeout) {
+            intervalFunc()
+          }
+        }, delay)
+      : null
+
+  /**
+   * Cleanup function
+   * @return {void}
+   */
   const stopNow = () => {
     if (timeout) clearTimeout(timeout)
     if (interval) clearInterval(interval)
@@ -160,7 +185,7 @@ export function startInterval(
      * @param {boolean} stopRunning - optional
      * @return void
      */
-    return (stopRunning?: boolean) => {
+    return (stopRunning: boolean = false) => {
       clearTimeout(stopTimeout)
       if (stopRunning) stopNow()
     }
